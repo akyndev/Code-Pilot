@@ -25,13 +25,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { incidents } from "@/lib/mock-data"
 
-const incidents = [
-  ["Checkout latency spike", "Revenue", "High", "Open", "6m", "Maya Chen"],
-  ["CI queue saturation", "Developer Experience", "Medium", "Acknowledged", "14m", "Ari Kim"],
-  ["Webhook retries elevated", "Integrations", "Low", "Monitoring", "31m", "Noah Patel"],
-  ["Auth error budget burn", "Identity", "High", "Open", "42m", "Leah Stone"],
-]
+const openIncidents = incidents.filter((incident) => incident.status !== "Resolved")
+const highSeverityIncidents = incidents.filter((incident) => incident.severity === "High")
 
 export default function AlertsPage() {
   return (
@@ -60,8 +57,8 @@ export default function AlertsPage() {
 
       <div className="grid gap-4 md:grid-cols-4">
         {[
-          [SirenIcon, "Open incidents", "5", "1 high severity"],
-          [ClockIcon, "Ack time", "6m", "Median response"],
+          [SirenIcon, "Open incidents", openIncidents.length.toString(), `${highSeverityIncidents.length} high severity`],
+          [ClockIcon, "Ack time", "6m", `Fastest response: ${incidents[0].ackTime}`],
           [AlertTriangleIcon, "Noisy alerts", "14", "-22% this month"],
           [CheckCircle2Icon, "Resolved today", "18", "Across 7 services"],
         ].map(([Icon, label, value, detail]) => {
@@ -103,18 +100,23 @@ export default function AlertsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {incidents.map(([incident, service, severity, status, ack, owner]) => (
-                  <TableRow key={incident}>
-                    <TableCell className="font-medium">{incident}</TableCell>
-                    <TableCell>{service}</TableCell>
+                {incidents.map((incident) => (
+                  <TableRow key={incident.title}>
                     <TableCell>
-                      <Badge variant={severity === "High" ? "destructive" : "outline"}>
-                        {severity}
+                      <div>
+                        <p className="font-medium">{incident.title}</p>
+                        <p className="text-xs text-muted-foreground">Started {incident.startedAt}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono">{incident.service}</TableCell>
+                    <TableCell>
+                      <Badge variant={incident.severity === "High" ? "destructive" : "outline"}>
+                        {incident.severity}
                       </Badge>
                     </TableCell>
-                    <TableCell>{status}</TableCell>
-                    <TableCell>{ack}</TableCell>
-                    <TableCell>{owner}</TableCell>
+                    <TableCell>{incident.status}</TableCell>
+                    <TableCell>{incident.ackTime}</TableCell>
+                    <TableCell>{incident.owner}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -23,13 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { deployments } from "@/lib/mock-data"
 
-const deployments = [
-  ["api-gateway", "Production", "v2.18.0", "Success", "18m ago", "Maya Chen"],
-  ["billing-service", "Staging", "v1.42.3", "Failed", "44m ago", "Release Bot"],
-  ["mobile-sdk", "Production", "v5.9.1", "Success", "2h ago", "Ari Kim"],
-  ["auth-core", "Canary", "v3.4.8", "Running", "3h ago", "Noah Patel"],
-]
+const productionDeployments = deployments.filter(
+  (deployment) => deployment.environment === "Production"
+).length
+const failedDeployments = deployments.filter(
+  (deployment) => deployment.status === "Failed"
+).length
 
 export default function DeploymentAnalyticsPage() {
   return (
@@ -49,8 +50,8 @@ export default function DeploymentAnalyticsPage() {
 
       <div className="grid gap-4 md:grid-cols-4">
         {[
-          [RocketIcon, "Deployments", "213", "32 production releases"],
-          [AlertTriangleIcon, "Failure rate", "3.1%", "-1.4% this month"],
+          [RocketIcon, "Deployments", "213", `${productionDeployments * 16} production releases`],
+          [AlertTriangleIcon, "Failure rate", "3.1%", `${failedDeployments} failed release this cycle`],
           [ClockIcon, "MTTR", "18m", "Median recovery"],
           [CheckCircle2Icon, "Change success", "96.9%", "+4.2% this quarter"],
         ].map(([Icon, label, value, detail]) => {
@@ -116,16 +117,18 @@ export default function DeploymentAnalyticsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {deployments.map(([service, env, version, status, when, owner]) => (
-                  <TableRow key={`${service}-${version}`}>
-                    <TableCell className="font-mono font-medium">{service}</TableCell>
-                    <TableCell>{env}</TableCell>
-                    <TableCell>{version}</TableCell>
+                {deployments.map((deployment) => (
+                  <TableRow key={`${deployment.service}-${deployment.version}`}>
+                    <TableCell className="font-mono font-medium">{deployment.service}</TableCell>
+                    <TableCell>{deployment.environment}</TableCell>
+                    <TableCell>{deployment.version}</TableCell>
                     <TableCell>
-                      <Badge variant={status === "Failed" ? "destructive" : "outline"}>{status}</Badge>
+                      <Badge variant={deployment.status === "Failed" ? "destructive" : "outline"}>
+                        {deployment.status}
+                      </Badge>
                     </TableCell>
-                    <TableCell>{when}</TableCell>
-                    <TableCell>{owner}</TableCell>
+                    <TableCell>{deployment.deployedAt}</TableCell>
+                    <TableCell>{deployment.owner}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

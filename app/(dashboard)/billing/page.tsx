@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
-const invoices = [
-  ["CP-2026-004", "May 01, 2026", "$1,500.00", "Scale", "Paid"],
-  ["CP-2026-003", "Apr 01, 2026", "$1,500.00", "Scale", "Paid"],
-  ["CP-2026-002", "Mar 01, 2026", "$1,500.00", "Scale", "Paid"],
-  ["CP-2026-001", "Feb 01, 2026", "$1,250.00", "Growth", "Paid"]
-]
+import { invoices } from "@/lib/mock-data"
 
 export default function BillingPage() {
   return (
@@ -174,14 +168,14 @@ export default function BillingPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map(([invoice, date, amount, plan, status]) => (
-                <TableRow key={invoice}>
-                  <TableCell className="font-medium">{invoice}</TableCell>
-                  <TableCell>{date}</TableCell>
-                  <TableCell>{amount}</TableCell>
-                  <TableCell>{plan}</TableCell>
+              {invoices.map((invoice) => (
+                <TableRow key={invoice.id}>
+                  <TableCell className="font-medium">{invoice.id}</TableCell>
+                  <TableCell>{invoice.date}</TableCell>
+                  <TableCell>{invoice.amount}</TableCell>
+                  <TableCell>{invoice.plan}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{status}</Badge>
+                    <Badge variant="secondary">{invoice.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button size="icon-sm" variant="ghost">

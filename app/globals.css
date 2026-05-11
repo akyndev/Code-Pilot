@@ -48,6 +48,9 @@
   --radius-2xl: calc(var(--radius) * 1.65);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-aurora: aurora 8s ease-in-out infinite alternate;
+  --animate-beam: beam 6s linear infinite;
+  --animate-marquee: marquee var(--duration) linear infinite;
 }
 :root {
   color-scheme: light;
@@ -177,5 +180,66 @@
 
   [data-slot="chart"] .recharts-cartesian-grid line {
     @apply stroke-border/60;
+  }
+}
+
+@keyframes aurora {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes beam {
+  0% {
+    transform: translateY(-30%) rotate(var(--beam-rotate, 18deg));
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(220%) rotate(var(--beam-rotate, 18deg));
+    opacity: 0;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(var(--radius))
+      rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(var(--radius))
+      rotate(-360deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
   }
 }

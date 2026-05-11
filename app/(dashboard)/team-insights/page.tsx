@@ -34,13 +34,15 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { engineers } from "@/lib/mock-data"
 
-const contributors = [
-  ["Ari Kim", "Frontend Platform", "18", "7", "82", "Healthy", "AK"],
-  ["Noah Patel", "API Systems", "14", "11", "68", "Balanced", "NP"],
-  ["Leah Stone", "Security", "8", "15", "44", "Watch", "LS"],
-  ["Maya Chen", "Infrastructure", "12", "9", "73", "Healthy", "MC"],
-]
+const activeEngineers = engineers.filter((engineer) => engineer.status === "Active")
+const averageReviewLoad =
+  activeEngineers.reduce((total, engineer) => total + engineer.reviews, 0) /
+  activeEngineers.length
+const averageFocus =
+  activeEngineers.reduce((total, engineer) => total + engineer.focusScore, 0) /
+  activeEngineers.length
 
 export default function TeamInsightsPage() {
   return (
@@ -72,9 +74,9 @@ export default function TeamInsightsPage() {
 
       <div className="grid gap-4 md:grid-cols-4">
         {[
-          [UsersIcon, "Contributors", "68", "+6 this week"],
-          [GitPullRequestIcon, "Review load", "2.8", "PRs per reviewer"],
-          [BrainIcon, "Focus index", "84%", "+5% from baseline"],
+          [UsersIcon, "Contributors", "68", `${activeEngineers.length} active maintainers sampled`],
+          [GitPullRequestIcon, "Review load", averageReviewLoad.toFixed(1), "Reviews per engineer"],
+          [BrainIcon, "Focus index", `${Math.round(averageFocus)}%`, "+5% from baseline"],
           [CalendarClockIcon, "On-call load", "6", "Active rotations"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof UsersIcon
@@ -123,28 +125,37 @@ export default function TeamInsightsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {contributors.map(([name, team, prs, reviews, focus, status, fallback]) => (
-                  <TableRow key={name}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="size-9 rounded-lg">
-                          <AvatarImage src="/avatars/shadcn.jpg" alt={name} />
-                          <AvatarFallback className="rounded-lg">{fallback}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium">{name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{team}</TableCell>
-                    <TableCell>{prs}</TableCell>
-                    <TableCell>{reviews}</TableCell>
-                    <TableCell className="min-w-36">
-                      <Progress value={Number(focus)} />
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{status}</Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {activeEngineers.map((engineer) => {
+                  const status =
+                    engineer.focusScore >= 75
+                      ? "Healthy"
+                      : engineer.focusScore >= 65
+                        ? "Balanced"
+                        : "Watch"
+
+                  return (
+                    <TableRow key={engineer.email}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="size-9 rounded-lg">
+                            <AvatarImage src="/avatars/shadcn.jpg" alt={engineer.name} />
+                            <AvatarFallback className="rounded-lg">{engineer.initials}</AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium">{engineer.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{engineer.team}</TableCell>
+                      <TableCell>{engineer.mergedPrs}</TableCell>
+                      <TableCell>{engineer.reviews}</TableCell>
+                      <TableCell className="min-w-36">
+                        <Progress value={engineer.focusScore} />
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{status}</Badge>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </CardContent>

@@ -27,41 +27,42 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { deployments, incidents, invoices, pullRequests } from "@/lib/mock-data"
 
 const events = [
   {
-    title: "PR merged in api-gateway",
-    detail: "Maya Chen merged #4821 after 2 approvals and passing checks.",
+    title: `PR #${pullRequests[0].id} ready in ${pullRequests[0].repo}`,
+    detail: `${pullRequests[0].author} moved "${pullRequests[0].title}" to ${pullRequests[0].stage.toLowerCase()} with ${pullRequests[0].checks.toLowerCase()} checks.`,
     time: "2m ago",
     type: "Code",
     icon: GitMergeIcon,
   },
   {
-    title: "Production deploy completed",
-    detail: "Release v2.18.0 shipped to production with no rollback signals.",
-    time: "18m ago",
+    title: `${deployments[0].environment} deploy completed`,
+    detail: `${deployments[0].version} shipped for ${deployments[0].service} in ${deployments[0].duration}.`,
+    time: deployments[0].deployedAt,
     type: "Deploy",
     icon: RocketIcon,
   },
   {
-    title: "Critical vulnerability assigned",
-    detail: "AppSec assigned CVE remediation to billing-service owners.",
+    title: "Critical incident assigned",
+    detail: `${incidents[0].owner} is handling ${incidents[0].title.toLowerCase()} for ${incidents[0].service}.`,
     time: "44m ago",
-    type: "Security",
+    type: "Incident",
     icon: ShieldAlertIcon,
   },
   {
     title: "Incident acknowledged",
-    detail: "Revenue team acknowledged checkout latency alert in 6 minutes.",
+    detail: `${incidents[1].owner} acknowledged ${incidents[1].service} after ${incidents[1].ackTime}.`,
     time: "1h ago",
     type: "Incident",
     icon: BellIcon,
   },
   {
-    title: "Weekly report generated",
-    detail: "Engineering leadership digest is ready for review.",
+    title: "Invoice reconciled",
+    detail: `${invoices[0].id} for ${invoices[0].amount} was marked ${invoices[0].status.toLowerCase()} on the ${invoices[0].plan} plan.`,
     time: "2h ago",
-    type: "Report",
+    type: "Billing",
     icon: CheckCircle2Icon,
   },
 ]

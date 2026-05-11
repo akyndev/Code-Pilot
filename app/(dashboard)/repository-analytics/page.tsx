@@ -25,13 +25,15 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { pullRequests, repos } from "@/lib/mock-data"
 
-const repositories = [
-  ["api-gateway", "Platform", "428", "18", "42", "4.2h", "Healthy"],
-  ["billing-service", "Revenue", "286", "11", "27", "6.8h", "Watch"],
-  ["mobile-sdk", "Developer Experience", "194", "7", "33", "9.1h", "Needs triage"],
-  ["auth-core", "Identity", "312", "14", "18", "3.6h", "Healthy"],
-]
+const totalCommits = repos.reduce((total, repo) => total + repo.commits30d, 0)
+const totalOpenPrs = repos.reduce((total, repo) => total + repo.openPrs, 0)
+const totalIssues = repos.reduce((total, repo) => total + repo.issues, 0)
+const medianReview =
+  repos.reduce((total, repo) => total + repo.medianReviewHours, 0) / repos.length
+
+const prStages = ["Draft", "In review", "Changes requested", "Ready to merge"] as const
 
 export default function RepositoryAnalyticsPage() {
   return (
@@ -60,9 +62,9 @@ export default function RepositoryAnalyticsPage() {
 
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          [GitCommitIcon, "Commits", "1,284", "+14% over last sprint"],
-          [GitPullRequestIcon, "Merged PRs", "342", "4.2h median review"],
-          [BugIcon, "Open Issues", "96", "18 marked priority"],
+          [GitCommitIcon, "Commits", totalCommits.toLocaleString(), "+14% over last sprint"],
+          [GitPullRequestIcon, "Open PRs", totalOpenPrs.toString(), `${medianReview.toFixed(1)}h median review`],
+          [BugIcon, "Open Issues", totalIssues.toString(), "18 marked priority"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof GitCommitIcon
 
@@ -94,7 +96,7 @@ export default function RepositoryAnalyticsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Repository</TableHead>
-                  <TableHead>Owner</TableHead>
+                  <TableHead>Team</TableHead>
                   <TableHead>Commits</TableHead>
                   <TableHead>Open PRs</TableHead>
                   <TableHead>Issues</TableHead>
@@ -103,16 +105,21 @@ export default function RepositoryAnalyticsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {repositories.map(([repo, owner, commits, prs, issues, review, status]) => (
-                  <TableRow key={repo}>
-                    <TableCell className="font-mono font-medium">{repo}</TableCell>
-                    <TableCell>{owner}</TableCell>
-                    <TableCell>{commits}</TableCell>
-                    <TableCell>{prs}</TableCell>
-                    <TableCell>{issues}</TableCell>
-                    <TableCell>{review}</TableCell>
+                {repos.map((repo) => (
+                  <TableRow key={repo.name}>
                     <TableCell>
-                      <Badge variant="outline">{status}</Badge>
+                      <div>
+                        <p className="font-mono font-medium">{repo.name}</p>
+                        <p className="text-xs text-muted-foreground">{repo.language}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>{repo.team}</TableCell>
+                    <TableCell>{repo.commits30d.toLocaleString()}</TableCell>
+                    <TableCell>{repo.openPrs}</TableCell>
+                    <TableCell>{repo.issues}</TableCell>
+                    <TableCell>{repo.medianReviewHours.toFixed(1)}h</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{repo.status}</Badge>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -127,20 +134,19 @@ export default function RepositoryAnalyticsPage() {
             <CardDescription>Current pull requests by review stage</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 p-5">
-            {[
-              ["Draft", 24],
-              ["In review", 38],
-              ["Changes requested", 12],
-              ["Ready to merge", 19],
-            ].map(([stage, value]) => (
-              <div key={stage as string}>
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="font-medium">{stage as string}</span>
-                  <Badge variant="secondary">{value as number}</Badge>
+            {prStages.map((stage) => {
+              const value = pullRequests.filter((pr) => pr.stage === stage).length
+
+              return (
+                <div key={stage}>
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="font-medium">{stage}</span>
+                    <Badge variant="secondary">{value}</Badge>
+                  </div>
+                  <Progress value={value * 22} />
                 </div>
-                <Progress value={(value as number) * 2} />
-              </div>
-            ))}
+              )
+            })}
           </CardContent>
         </Card>
       </div>
@@ -151,7 +157,11 @@ export default function RepositoryAnalyticsPage() {
           <CardDescription>Areas where repository work is backing up</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 p-5 md:grid-cols-3">
-          {["Flaky tests in mobile-sdk", "Billing migrations need review", "Auth-core security backlog"].map((item) => (
+          {[
+            "Flaky Android release tests in mobile-sdk",
+            "Ledger migration reviews backing up in payments-service",
+            "Token refresh security backlog in auth-api",
+          ].map((item) => (
             <div key={item} className="flex gap-3 rounded-xl border border-border/70 bg-secondary/25 p-4">
               <CircleDotIcon className="mt-0.5 size-4 text-primary" />
               <p className="text-sm text-muted-foreground">{item}</p>

@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { repos } from "@/lib/mock-data"
 
 const apiKeys = [
   ["Production API key", "sk_live_********4248", "Disabled", "25 Jan, 2026", "Today, 10:45 AM"],
@@ -32,12 +33,13 @@ const apiKeys = [
   ["Legacy API key", "leg_live_********0932", "Active", "12 Mar, 2025", "Yesterday, 11:45 PM"],
 ]
 
-const endpoints = [
-  ["/v1/runs", "4.2M", "184ms", "0.12%", "Within SLO"],
-  ["/v1/repos", "2.8M", "211ms", "0.24%", "Watch"],
-  ["/v1/webhooks", "1.6M", "143ms", "0.08%", "Healthy"],
-  ["/v1/reports", "890k", "268ms", "0.19%", "Within SLO"],
-]
+const endpoints = repos.slice(0, 4).map((repo, index) => ({
+  endpoint: `/v1/repos/${repo.name}`,
+  requests: ["4.2M", "2.8M", "1.6M", "890k"][index],
+  p95: ["184ms", "211ms", "143ms", "268ms"][index],
+  errors: ["0.12%", "0.24%", "0.08%", "0.19%"][index],
+  status: repo.status === "Needs triage" ? "Watch" : "Within SLO",
+}))
 
 export default function ApiUsagePage() {
   return (
@@ -133,14 +135,14 @@ export default function ApiUsagePage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {endpoints.map(([endpoint, requests, p95, errors, status]) => (
-                  <TableRow key={endpoint}>
-                    <TableCell className="font-mono font-medium">{endpoint}</TableCell>
-                    <TableCell>{requests}</TableCell>
-                    <TableCell>{p95}</TableCell>
-                    <TableCell>{errors}</TableCell>
+                {endpoints.map((endpoint) => (
+                  <TableRow key={endpoint.endpoint}>
+                    <TableCell className="font-mono font-medium">{endpoint.endpoint}</TableCell>
+                    <TableCell>{endpoint.requests}</TableCell>
+                    <TableCell>{endpoint.p95}</TableCell>
+                    <TableCell>{endpoint.errors}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">{status}</Badge>
+                      <Badge variant="outline">{endpoint.status}</Badge>
                     </TableCell>
                   </TableRow>
                 ))}

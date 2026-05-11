@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 
+import { CodePilotMark } from "@/components/codepilot-logo"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -63,40 +64,6 @@ const data = {
   navSecondary: createNavItems(["/billing", "/team-management", "/settings"])
 }
 
-function CodePilotMark() {
-  return (
-    <span className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-sidebar-border bg-primary text-primary-foreground shadow-sm">
-      <span className="absolute inset-px rounded-[11px] bg-[linear-gradient(135deg,#FFD6BA_0%,#FFDCDC_48%,#FFF2EB_100%)]" />
-      <svg
-        aria-hidden="true"
-        className="relative size-5 text-[#3a2520]"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M6.75 15.5V8.75C6.75 7.78 7.53 7 8.5 7h3"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="2.2"
-        />
-        <path
-          d="M11 17V7h4.1c1.55 0 2.8 1.25 2.8 2.8s-1.25 2.8-2.8 2.8H11"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2.2"
-        />
-        <path
-          d="M5 18.5h14"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="2.2"
-        />
-      </svg>
-    </span>
-  )
-}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -108,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5! hover:bg-transparent hover:text-sidebar-foreground active:bg-transparent active:text-sidebar-foreground data-active:bg-transparent data-active:text-sidebar-foreground data-active:shadow-none data-open:hover:bg-transparent data-open:hover:text-sidebar-foreground"
             >
               <Link href="/overview">
-                <CodePilotMark />
+                <CodePilotMark className="border-sidebar-border" />
                 <span className="text-base font-semibold tracking-tight">CodePilot</span>
               </Link>
             </SidebarMenuButton>

@@ -27,13 +27,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { engineers } from "@/lib/mock-data"
 
-const members = [
-  ["Maya Chen", "maya@codepilot.ai", "Platform", "Admin", "Active", "MC"],
-  ["Ari Kim", "ari@codepilot.ai", "Frontend Platform", "Manager", "Active", "AK"],
-  ["Noah Patel", "noah@codepilot.ai", "API Systems", "Member", "Active", "NP"],
-  ["Leah Stone", "leah@codepilot.ai", "Security", "Auditor", "Invited", "LS"],
-]
+const admins = engineers.filter((engineer) => ["Owner", "Admin"].includes(engineer.role))
+const invited = engineers.filter((engineer) => engineer.status === "Invited")
 
 export default function TeamManagementPage() {
   return (
@@ -59,8 +56,8 @@ export default function TeamManagementPage() {
 
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          [UsersIcon, "Members", "84", "6 admins"],
-          [UserPlusIcon, "Invites", "7", "Pending acceptance"],
+          [UsersIcon, "Members", "84", `${admins.length} admins`],
+          [UserPlusIcon, "Invites", invited.length.toString(), "Pending acceptance"],
           [ShieldCheckIcon, "Roles", "5", "Custom access groups"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof UsersIcon
@@ -108,25 +105,25 @@ export default function TeamManagementPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {members.map(([name, email, team, role, status, fallback]) => (
-                <TableRow key={email}>
+              {engineers.map((member) => (
+                <TableRow key={member.email}>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="size-9 rounded-lg">
-                        <AvatarImage src="/avatars/shadcn.jpg" alt={name} />
-                        <AvatarFallback className="rounded-lg">{fallback}</AvatarFallback>
+                        <AvatarImage src="/avatars/shadcn.jpg" alt={member.name} />
+                        <AvatarFallback className="rounded-lg">{member.initials}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{name}</p>
-                        <p className="text-sm text-muted-foreground">{email}</p>
+                        <p className="font-medium">{member.name}</p>
+                        <p className="text-sm text-muted-foreground">{member.email}</p>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{team}</TableCell>
+                  <TableCell>{member.team}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{role}</Badge>
+                    <Badge variant="outline">{member.role}</Badge>
                   </TableCell>
-                  <TableCell>{status}</TableCell>
+                  <TableCell>{member.status}</TableCell>
                   <TableCell className="text-right">
                     <Button size="icon-sm" variant="ghost">
                       <MoreHorizontalIcon />
@@ -164,9 +161,9 @@ export default function TeamManagementPage() {
             <CardDescription>People waiting to join this workspace</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 p-5">
-            {["sam@codepilot.ai", "victoria@codepilot.ai", "ops@codepilot.ai"].map((email) => (
-              <div key={email} className="flex items-center justify-between rounded-xl border border-border/70 p-4">
-                <span className="font-medium">{email}</span>
+            {invited.map((member) => (
+              <div key={member.email} className="flex items-center justify-between rounded-xl border border-border/70 p-4">
+                <span className="font-medium">{member.email}</span>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline">Resend</Button>
                   <Button size="sm" variant="ghost">Cancel</Button>

@@ -75,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5! hover:bg-transparent hover:text-sidebar-foreground active:bg-transparent active:text-sidebar-foreground data-active:bg-transparent data-active:text-sidebar-foreground data-active:shadow-none data-open:hover:bg-transparent data-open:hover:text-sidebar-foreground"
             >
               <Link href="/overview">
-                <CodePilotMark className="border-sidebar-border" />
+                <CodePilotMark className="size-12" />
                 <span className="text-base font-semibold tracking-tight">CodePilot</span>
               </Link>
             </SidebarMenuButton>

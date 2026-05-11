@@ -6,7 +6,7 @@ import {
   SparklesIcon,
 } from "lucide-react"
 
-import { CodePilotLogo, CodePilotMark } from "@/components/codepilot-logo"
+import { CodePilotMark } from "@/components/codepilot-logo"
 import { ProductDemo } from "@/components/marketing-demo"
 import { PricingSection } from "@/components/pricing-section"
 import { SlackLogo } from "@/components/slack-logo"
@@ -240,11 +240,8 @@ export function MarketingHome() {
       <section id="home" className="relative isolate overflow-hidden px-4 pt-14 pb-20 md:px-6 md:pt-20">
         <GridPattern />
         <BackgroundBeams />
-        <div className="absolute inset-x-0 top-0 -z-10 h-[620px] bg-[radial-gradient(circle_at_50%_0%,#FFD6A6_0%,#FFDCDC_28%,transparent_62%)] opacity-60" />
+        <div className="absolute inset-x-0 top-0 -z-10 h-155 bg-[radial-gradient(circle_at_50%_0%,#FFD6A6_0%,#FFDCDC_28%,transparent_62%)] opacity-60" />
         <BlurFade className="relative mx-auto flex max-w-4xl flex-col items-center text-center" duration={0.65} offset={28}>
-          <BlurFade delay={0.08} duration={0.45} offset={0} blur="3px">
-            <CodePilotLogo />
-          </BlurFade>
           <BlurFade delay={0.12}>
             <Badge className="mt-8 gap-1.5" variant="secondary">
               <SparklesIcon className="size-3.5" />
@@ -417,7 +414,7 @@ export function MarketingHome() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#FFD6A6_0%,transparent_42%)] opacity-25" />
               <div className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#FFF2EB_0%,transparent_68%)] opacity-75 blur-2xl" />
               <div className="relative z-10 grid size-24 place-items-center rounded-full border border-border/70 bg-background/95 shadow-xl ring-1 ring-white/30">
-                <CodePilotMark className="size-14 rounded-2xl" />
+                <CodePilotMark className="size-16" />
               </div>
               <OrbitingCircles iconSize={58} radius={92} duration={18} reverse>
                 {integrationLogos.slice(0, 3).map((integration) => (

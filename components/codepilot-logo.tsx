@@ -4,14 +4,13 @@ export function CodePilotMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-primary text-primary-foreground shadow-sm",
+        "relative flex size-10 shrink-0 items-center justify-center text-[#3a2520] transition-colors dark:text-[#FFD6BA]",
         className
       )}
     >
-      <span className="absolute inset-px rounded-[11px] bg-[linear-gradient(135deg,#FFD6BA_0%,#FFDCDC_48%,#FFF2EB_100%)]" />
       <svg
         aria-hidden="true"
-        className="relative size-5 text-[#3a2520]"
+        className="relative size-[80%]"
         viewBox="0 0 24 24"
         fill="none"
       >
@@ -41,7 +40,7 @@ export function CodePilotMark({ className }: { className?: string }) {
 
 export function CodePilotLogo() {
   return (
-    <span className="flex items-center gap-2">
+    <span className="flex items-center gap-2.5">
       <CodePilotMark />
       <span className="text-base font-semibold tracking-tight">CodePilot</span>
     </span>

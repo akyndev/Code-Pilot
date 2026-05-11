@@ -1,3 +1,6 @@
+"use client"
+
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
@@ -15,8 +18,17 @@ export function SigninForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const router = useRouter()
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      className={cn("flex flex-col gap-6", className)}
+      onSubmit={(event) => {
+        event.preventDefault()
+        router.push("/overview")
+      }}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Welcome back</h1>

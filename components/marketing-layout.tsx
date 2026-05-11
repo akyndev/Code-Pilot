@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { CodePilotLogo } from "@/components/codepilot-logo"
+import { MarketingLenis } from "@/components/marketing-lenis"
 import { Button } from "@/components/ui/button"
 import { marketingNav } from "@/lib/marketing-data"
 
@@ -144,10 +145,12 @@ export function MarketingFooter() {
 
 export function MarketingPageFrame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <MarketingHeader />
-      <main>{children}</main>
-      <MarketingFooter />
-    </div>
+    <MarketingLenis>
+      <div className="min-h-screen bg-background text-foreground">
+        <MarketingHeader />
+        <main>{children}</main>
+        <MarketingFooter />
+      </div>
+    </MarketingLenis>
   )
 }
